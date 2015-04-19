@@ -1,0 +1,40 @@
+In my sudoku project, there are two excecutable programs:
+--give_question
+--solve
+therefore, to check my program, you can type this:
+--./give_question > question.txt
+--./solve < question.txt
+
+This is how my class looks like, and the comments are what they are for:
+ public:
+        static const int sudokuSize = 144;        // 12*12 sudoku map constant
+        Sudoku();                                 // constructer
+        Sudoku(const int init_map[]);             // constructer
+        void setMap(const int set_map[]);         // set sudoku map same as argument array 
+        int getElement(int index);                // get element from map sudoku
+        void setElement(int index, int value);    // set element of map sudoku
+        void printBoard();                        // print sudoku map
+        Sudoku copyBoard();                       // copy sudoku map
+        bool isCorrect();                         // check sudoku map plausiblity by rows, columns, cells
+        bool isEqual(Sudoku su);                  // check two sudoku map equality           
+        void GiveQuestion();                      // produce sudoku problem
+        void ReadIn();                            // read in sudoku problem
+        int Solve();                              // solve sudoku problem by recursion
+                                                     (print number of solution of problem defautly)
+        int Solve(bool printStat);                // solve the sudoku problem by recursion
+                                                     (print number of solution of problem if needed)
+        int getFirstZeroIndex();                  // find first zero in sudoku question
+        bool isValid();                           // block inpluasible recursion in Solve()
+
+    private:
+                                                  /**for isCorrect**/
+        bool checkRow(int arr[]);                 // check map in row, columns (1-9 once && -1 thrice)
+        bool checkCell(int arr[]);                // check map in cell ((1-9 once && -1 thrice) || (-1 twelith))
+                                                  /**for isValid**/
+        bool checkLegalRow(int arr[]);            // check map in row, colums (1-9 !> 1 && -1 thrice)
+        bool checkLegalCell(int arr[]);           // check map in cell ((1-9 once && -1 thrice) || (-1 twelith))
+        bool findSolution(Sudoku question, Sudoku &answer); // find solution in Solve()
+        int map[sudokuSize];                      // sudoku map
+
+In my give-question part, I set a 12*12 board with numbers and blackholes(-1) in it. Then I change 1-12 numbers randomly. For example, change all the 1s into9s; all the 2s into 8s; allt he 3s into 7s...and so on. In that way, I can produce several kinds of question. 
+In my solve part of my program, I filled the zeros from 1-9 recursively in Solve(); block the recursion that are inpluasible in order to speed up the costing time.
