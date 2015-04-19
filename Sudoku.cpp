@@ -1,5 +1,6 @@
-/*
-note:
+/* NCKU Course C++ Project01 Sudoku
+
+Note:
 This .cpp file implement the body of member function of
 the class define in the head file
 */
@@ -31,6 +32,7 @@ int randNum(int lw, int up){
 /* Sudoku */
 Sudoku::Sudoku(){
     /* constructor */
+        num_sol = 0;
 	for (int i = 0; i < sudokuSize; i++){
 		map[i] = 0;
 	} // end for loop
@@ -38,7 +40,7 @@ Sudoku::Sudoku(){
 
 Sudoku::Sudoku(const int init_map[]){
     /* constructor */
-
+        num_sol = 0;
 	for (int idx = 0; idx < sudokuSize; idx += 1){
 		map[idx] = init_map[idx];
 	} // end for loop
@@ -337,7 +339,7 @@ bool Sudoku::isEqual(Sudoku su){
     return true; // all elements are the same
 }
 
-bool Sudoku::findSolution(Sudoku question, Sudoku &answer){
+void Sudoku::findSolution(Sudoku question, Sudoku &answer){
     /* Recursive function */
     int firstZero;
     firstZero = question.getFirstZeroIndex();
@@ -346,9 +348,11 @@ bool Sudoku::findSolution(Sudoku question, Sudoku &answer){
         /* Base Case */
         if (question.isCorrect()){
             answer = question;
-            return true;
+            //return 1;
+	    answer.num_sol += 1;
+	    //cout << num_sol << endl;
         } else {
-            return false;
+            answer.num_sol += 0;
         } // end inner if-else
 
     } else {
@@ -363,27 +367,25 @@ bool Sudoku::findSolution(Sudoku question, Sudoku &answer){
             } // end inner if
 
             // recursive solving
-            if (question.findSolution(question, answer)){
-                return true;
-            } // end inner if
-
+            question.findSolution(question, answer);
         } // end for loop
     // the board cannot be solved
-    return false;
+    //return false;
     } // end outer if-else
 } // end function findSolution
 
 int Sudoku::Solve(){
-    int num_sol = 0;
+    //int num_sol = 0;
     Sudoku su = Sudoku(map); // copy
     Sudoku ans = Sudoku();   // answer
     //printBoard();
     // solve and count number of solutions
-    num_sol += findSolution(su, ans);
+    findSolution(su, ans);
+    num_sol = ans.num_sol;
 
     // decide whether print out the number of solution or not
     if (num_sol == 0){
-        cout << num_sol << endl;
+        cout << 0 << endl;
 
     } else if (num_sol == 1){
         cout << 1 << endl;
@@ -403,13 +405,13 @@ int Sudoku::Solve(){
 } // end function solve
 
 int Sudoku::Solve(bool printStat){
-    int num_sol = 0;
+    //int num_sol = 0;
     Sudoku su = Sudoku(map); // copy
     Sudoku ans = Sudoku();   // answer
 
     // solve and count number of solutions
-    num_sol += findSolution(su, ans);
-
+    findSolution(su, ans);
+    num_sol = ans.num_sol;
     // decide whether print out the number of solution or not
     if (printStat){
         if (num_sol > 1){
@@ -427,7 +429,6 @@ int Sudoku::Solve(bool printStat){
             map[idx] = ans.getElement(idx);
         } // end for loop
     } // end if
-
     return num_sol;
 
 } // end function solve
@@ -491,10 +492,11 @@ void Sudoku::GiveQuestion(){
     int total_holes = 0;
     int num_hole = 0;
     int idx;
-    int num_sol = 0;
+    int num_ques_sol = 0;
+    //int num_sol = 0;
 
     do{
-        total_holes = randNum(1, 50);
+        total_holes = randNum(1, 10);
         //cout << "Number of holes: " << total_holes << endl;
 
         // create blank in the Sudoku board
@@ -511,10 +513,8 @@ void Sudoku::GiveQuestion(){
 
         //cout << "Result Question: " << endl;
         //question.printBoard();
-
-        num_sol = question.copyBoard().Solve(false);
-        //cout << "Number of Solutions: " << num_sol << endl;
-     } while (num_sol != 1);
+        num_ques_sol = question.copyBoard().Solve(false);
+     } while (num_ques_sol != 1);
 
      // record the answer
      for (int idx = 0; idx < sudokuSize; idx += 1){
@@ -523,7 +523,7 @@ void Sudoku::GiveQuestion(){
 
      // print out the question
      question.printBoard();
-
+     num_sol = 0;
 } // end function giveQuestion
 
 void Sudoku::ReadIn(){
@@ -543,7 +543,11 @@ void Sudoku::ReadIn(){
     //    only c-string! So pass the string using c_str()
 
     //Ref:
-f(!inFile){
+    //http://stackoverflow.com/questions/1662624/c-ifstream-open-problem-with-passing-a-string-for-text-file-name
+
+
+    // check inFile
+    if(!inFile){
         cerr << "Failed opening" << endl;
         exit(1);
     } // end if
@@ -562,3 +566,4 @@ f(!inFile){
 
     setMap(sudoku_in);
 } // end function importSudoku
+

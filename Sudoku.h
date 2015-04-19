@@ -1,5 +1,5 @@
-/*
-note: this is the head file for Class in Sudoku project
+/* NCKU Course C++ Project01 Sudoku
+Note: this is the head file for Class in Sudoku project
 */
 
 #include <iostream>
@@ -26,14 +26,14 @@ class Sudoku {
         int Solve(bool printStat);
         void ReadIn();
         static const int sudokuSize = 144;
-
+        int num_sol;
     private:
         bool checkRow(int arr[]);
         bool checkCell(int arr[]);
         bool checkLegalRow(int arr[]);
         bool checkLegalCell(int arr[]);
-        bool findSolution(Sudoku question, Sudoku &answer);
+        void findSolution(Sudoku question, Sudoku &answer);
         int map[sudokuSize];
+        //int num_sol;
 };
-
 
